@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive LED Screen</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            overflow: hidden;
+        }
+        .pulse {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            animation: pulse-animation 1.5s ease-out forwards;
+        }
+        @keyframes pulse-animation {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script src="https://unpkg.com/partykit/client"></script>
+    <script>
+        // Connect to PartyKit room
+        const room = new PartyKitClient('your-room-id'); // Replace with your PartyKit room ID
+
+        // Function to create radial pulse effect
+        function createPulse(x, y, color) {
+            const pulse = document.createElement('div');
+            pulse.style.width = '100px';
+            pulse.style.height = '100px';
+            pulse.style.backgroundColor = color;
+            pulse.style.left = `${x}px`;
+            pulse.style.top = `${y}px`;
+            pulse.classList.add('pulse');
+            document.body.appendChild(pulse);
+
+            // Remove pulse after animation ends
+            pulse.addEventListener('animationend', () => {
+                pulse.remove();
+            });
+        }
+
+        // Listen for messages from PartyKit and create pulse effect
+        room.onMessage((message) => {
+            const { x, y, color } = message;
+            createPulse(x * window.innerWidth, y * window.innerHeight, color);
+        });
+    </script>
+</body>
+</html>
