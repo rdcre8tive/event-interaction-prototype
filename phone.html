@@ -10,9 +10,14 @@
     <input type="color" id="colorPicker" value="#ff0000">
     <div id="interaction-area" style="height: 80vh; border: 2px solid #ccc; margin-top: 10px;"></div>
 
-    <script src="https://unpkg.com/partykit/client"></script>
-    <script>
-        const room = new PartyKitClient('your-room-id'); // Replace with your PartyKit room ID
+    <script type="module">
+        import * as PartyKit from "https://unpkg.com/partykit/client.js";
+
+        const room = new PartyKit.PartySocket({
+            host: PARTYKIT_HOST,
+            room: "main"
+        });
+
         const interactionArea = document.getElementById('interaction-area');
 
         // Send the tap position and color to the TV screen
@@ -21,7 +26,7 @@
             const x = (event.clientX - rect.left) / rect.width;
             const y = (event.clientY - rect.top) / rect.height;
             const color = document.getElementById('colorPicker').value;
-            room.send({ x, y, color });
+            room.send(JSON.stringify({ x, y, color }));
         });
     </script>
 </body>
