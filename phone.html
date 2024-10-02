@@ -3,31 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phone Interaction</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+
+<title>Phone Interaction</title>
 </head>
 <body>
     <h3>Choose a color and tap the screen:</h3>
     <input type="color" id="colorPicker" value="#ff0000">
     <div id="interaction-area" style="height: 80vh; border: 2px solid #ccc; margin-top: 10px;"></div>
 
-    <script type="module">
-        import * as PartyKit from "https://unpkg.com/partykit/client.js";
-
-        const room = new PartyKit.PartySocket({
-            host: PARTYKIT_HOST,
-            room: "main"
-        });
-
+    <script>
+        // Add Firebase config here (from Step 2)
         const interactionArea = document.getElementById('interaction-area');
 
-        // Send the tap position and color to the TV screen
+        // Send the tap position and color to Firebase
         interactionArea.addEventListener('click', (event) => {
             const rect = interactionArea.getBoundingClientRect();
             const x = (event.clientX - rect.left) / rect.width;
             const y = (event.clientY - rect.top) / rect.height;
             const color = document.getElementById('colorPicker').value;
-            room.send(JSON.stringify({ x, y, color }));
+
+            // Push the data to Firebase
+            db.ref('interactions').set({ x, y, color });
         });
     </script>
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyAF_LlYtCA6VvpwTE4e4S4-1abFb8iBFTg",
+      authDomain: "event-test-d794b.firebaseapp.com",
+      projectId: "event-test-d794b",
+      storageBucket: "event-test-d794b.appspot.com",
+      messagingSenderId: "657072526921",
+      appId: "1:657072526921:web:056d2e6e517e7f8d6c5198",
+      measurementId: "G-324BKTG9PQ"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
 </body>
+
 </html>
