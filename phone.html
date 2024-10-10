@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Interaction</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    h3 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    #interaction-area {
+      height: 80vh;
+      border: 2px solid #ccc;
+      background-color: white;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <h3>Choose a color and tap the screen:</h3>
+  <input type="color" id="colorPicker" value="#ff0000">
+  <div id="interaction-area"></div>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyAF_LlYtCA6VvpwTE4e4S4-1abFb8iBFTg",
+      authDomain: "event-test-d794b.firebaseapp.com",
+      projectId: "event-test-d794b",
+      storageBucket: "event-test-d794b.appspot.com",
+      messagingSenderId: "657072526921",
+      appId: "1:657072526921:web:98e7e66fa669c5446c5198",
+      measurementId: "G-VN36696HKR"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+
+    const interactionArea = document.getElementById('interaction-area');
+
+    // Send the tap position and color to Firebase
+    interactionArea.addEventListener('click', (event) => {
+      const rect = interactionArea.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = (event.clientY - rect.top) / rect.height;
+      const color = document.getElementById('colorPicker').value;
+
+      // Push the data to Firebase
+      set(ref(db, 'interactions'), { x, y, color });
+    });
+  </script>
+</body>
+</html>
